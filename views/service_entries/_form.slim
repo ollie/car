@@ -1,0 +1,95 @@
+form action=url method="post"
+  .form-group.row
+    label.col-sm-4.col-form-label for="service-entry-date" Datum
+    .col-sm-8
+      input.form-control(
+        type="date"
+        id="service-entry-date"
+        name="service_entry[date]"
+        value=service_entry.date
+        class=('is-invalid' if service_entry.errors.on(:date))
+      )
+      - if service_entry.errors.on(:date)
+        .invalid-feedback = service_entry.errors.on(:date).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="service-entry-title" Název
+    .col-sm-8
+      input.form-control(
+        type="text"
+        id="service-entry-title"
+        name="service_entry[title]"
+        value=service_entry.title
+        class=('is-invalid' if service_entry.errors.on(:title))
+        autofocus
+      )
+      - if service_entry.errors.on(:title)
+        .invalid-feedback = service_entry.errors.on(:title).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="service-entry-odometer" Stav kilometrů
+    .col-sm-8
+      .input-group
+        input.form-control(
+          type="number"
+          id="service-entry-odometer"
+          name="service_entry[odometer]"
+          min="0"
+          value=service_entry.odometer
+          class=('is-invalid' if service_entry.errors.on(:odometer))
+        )
+        .input-group-append
+          span.input-group-text Km
+        - if service_entry.errors.on(:odometer)
+          .invalid-feedback = service_entry.errors.on(:odometer).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="service-entry-price" Cena
+    .col-sm-8
+      .input-group
+        input.form-control(
+          type="number"
+          id="service-entry-price"
+          name="service_entry[price]"
+          min="0"
+          step="0.01"
+          value=(format('%.2f', service_entry.price) if service_entry.price)
+          class=('is-invalid' if service_entry.errors.on(:price))
+        )
+        .input-group-append
+          span.input-group-text Kč
+        - if service_entry.errors.on(:price)
+          .invalid-feedback = service_entry.errors.on(:price).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="service-entry-expense" Výdaj
+    .col-sm-8
+      .input-group
+        input.form-control(
+          type="number"
+          id="service-entry-expense"
+          name="service_entry[expense]"
+          min="0"
+          step="0.01"
+          value=(format('%.2f', service_entry.expense) if service_entry.expense)
+          class=('is-invalid' if service_entry.errors.on(:expense))
+        )
+        .input-group-append
+          span.input-group-text Kč
+        - if service_entry.errors.on(:expense)
+          .invalid-feedback = service_entry.errors.on(:expense).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="service-entry-note" Poznámka
+    .col-sm-8
+      textarea.form-control(
+        type="text"
+        id="service-entry-note"
+        name="service_entry[note]"
+        rows="3"
+      ) = service_entry.note
+
+  .form-group.row
+    .offset-sm-4.col-sm-8
+      button.btn.btn-outline-primary> = (locals[:edit] ? 'Uložit' : 'Přidat')
+      a.btn.btn-outline-secondary href=service_entries_path Storno

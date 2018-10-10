@@ -1,0 +1,40 @@
+.row.mt-3
+  .col-sm-10
+    h1.mb-3 = title 'Tankování'
+  .col-sm-2.text-right
+    a.btn.btn-outline-primary.w-100.mb-3 href=new_fuel_entry_path Přidat
+
+table.table.table-hover
+  thead.thead-light
+    tr
+      th Datum
+      th.text-right Celkem
+      th.text-right Km
+      th.text-right Litrů
+      th.text-right Kč
+      th.text-right Kč/l
+      th.text-right Kč/km
+      th.text-right Ø/l
+    - if FuelEntry.stats
+      tr
+        th.text-nowrap.font-weight-normal = "#{format_number(FuelEntry.stats.entries, format: '%d')} tankování"
+        th
+        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.trips, format: '%d')
+        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.liters)
+        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.total_price)
+        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.unit_price)
+        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.price_per_km)
+        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.consumption)
+  tbody
+    - FuelEntry.ordered.each do |fuel_entry|
+      tr
+        td.text-nowrap
+          a href=edit_fuel_entry_path(fuel_entry.id)
+            = l(fuel_entry.paid_on)
+        td.text-nowrap.text-right = format_number(fuel_entry.odometer, format: '%d')
+        td.text-nowrap.text-right = format_number(fuel_entry.trip, format: '%d') if fuel_entry.trip
+        td.text-nowrap.text-right = format_number(fuel_entry.liters)
+        td.text-nowrap.text-right = format_number(fuel_entry.total_price)
+        td.text-nowrap.text-right = format_number(fuel_entry.unit_price)
+        td.text-nowrap.text-right = format_number(fuel_entry.price_per_km) if fuel_entry.price_per_km
+        td.text-nowrap.text-right = format_number(fuel_entry.consumption) if fuel_entry.consumption

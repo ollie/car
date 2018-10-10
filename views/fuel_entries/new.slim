@@ -1,0 +1,5 @@
+h1.mt-3.mb-3 = title 'Přidat nové tankování'
+
+.row
+  .col-sm-6
+    == partial_slim 'fuel_entries/_form', fuel_entry: fuel_entry, previous_fuel_entry: previous_fuel_entry, url: new_fuel_entry_path

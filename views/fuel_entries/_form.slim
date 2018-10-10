@@ -1,0 +1,101 @@
+form action=url method="post"
+  .form-group.row
+    .offset-sm-4.col-sm-8
+      .form-check
+        input type="hidden" name="fuel_entry[full]" value="0"
+        input.form-check-input type="checkbox" id="fuel-entry-full" name="fuel_entry[full]" value="1" checked=fuel_entry.full
+        label.form-check-label for="fuel-entry-full"
+          | Plná?
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="fuel-entry-paid_on" Datum
+    .col-sm-8
+      input.form-control(
+        type="date"
+        id="fuel-entry-paid_on"
+        name="fuel_entry[paid_on]"
+        value=fuel_entry.paid_on
+        class=('is-invalid' if fuel_entry.errors.on(:paid_on))
+      )
+      - if fuel_entry.errors.on(:paid_on)
+        .invalid-feedback = fuel_entry.errors.on(:paid_on).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="fuel-entry-odometer" Stav kilometrů
+    .col-sm-8
+      .input-group
+        input.form-control(
+          type="number"
+          id="fuel-entry-odometer"
+          name="fuel_entry[odometer]"
+          min="0"
+          value=fuel_entry.odometer
+          class=('is-invalid' if fuel_entry.errors.on(:odometer))
+          autofocus
+        )
+        .input-group-append
+          span.input-group-text Km
+        - if fuel_entry.errors.on(:odometer)
+          .invalid-feedback = fuel_entry.errors.on(:odometer).join(', ')
+        - if previous_fuel_entry
+          .form-control-plaintext.small
+            | Předchozí stav #{l(previous_fuel_entry.paid_on)} byl
+            span#previous-fuel-entry-odometer< data-value=previous_fuel_entry.odometer = "#{format_number(previous_fuel_entry.odometer, format: '%d')} Km."
+
+  .form-group.row
+    span.col-sm-4.col-form-label Denní počítadlo
+    .col-sm-8
+      #fuel-entry-trip.form-control-plaintext.d-none
+        span>
+        | Km
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="fuel-entry-liters" Litrů benzínu
+    .col-sm-8
+      .input-group
+        input.form-control(
+          type="number"
+          id="fuel-entry-liters"
+          name="fuel_entry[liters]"
+          min="0"
+          step="0.01"
+          value=(format('%.2f', fuel_entry.liters) if fuel_entry.liters)
+          class=('is-invalid' if fuel_entry.errors.on(:liters))
+        )
+        .input-group-append
+          span.input-group-text l
+        - if fuel_entry.errors.on(:liters)
+          .invalid-feedback = fuel_entry.errors.on(:liters).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="fuel-entry-total_price" Celková cena
+    .col-sm-8
+      .input-group
+        input.form-control(
+          type="number"
+          id="fuel-entry-total_price"
+          name="fuel_entry[total_price]"
+          min="0"
+          step="0.01"
+          value=(format('%.2f', fuel_entry.total_price) if fuel_entry.total_price)
+          class=('is-invalid' if fuel_entry.errors.on(:total_price))
+        )
+        .input-group-append
+          span.input-group-text Kč
+        - if fuel_entry.errors.on(:total_price)
+          .invalid-feedback = fuel_entry.errors.on(:total_price).join(', ')
+
+  .form-group.row
+    label.col-sm-4.col-form-label for="fuel-entry-note" Poznámka
+    .col-sm-8
+      textarea.form-control(
+        type="text"
+        id="fuel-entry-note"
+        name="fuel_entry[note]"
+        rows="1"
+      ) = fuel_entry.note
+
+  .form-group.row
+    .offset-sm-4.col-sm-8
+      button.btn.btn-outline-primary> = (locals[:edit] ? 'Uložit' : 'Přidat')
+      a.btn.btn-outline-secondary href=fuel_entries_path Storno
