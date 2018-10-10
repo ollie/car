@@ -4,7 +4,7 @@
   .col-sm-2.text-right
     a.btn.btn-outline-primary.w-100.mb-3 href=new_fuel_entry_path Přidat
 
-table.table.table-hover
+table.table.table-hover.mb-5
   thead.thead-light
     tr
       th Datum
@@ -16,7 +16,7 @@ table.table.table-hover
       th.text-right Kč/km
       th.text-right Ø/l
     - if FuelEntry.stats
-      tr
+      tr.small
         th.text-nowrap.font-weight-normal = "#{format_number(FuelEntry.stats.entries, format: '%d')} tankování"
         th
         th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.trips, format: '%d')
@@ -38,3 +38,8 @@ table.table.table-hover
         td.text-nowrap.text-right = format_number(fuel_entry.unit_price)
         td.text-nowrap.text-right = format_number(fuel_entry.price_per_km) if fuel_entry.price_per_km
         td.text-nowrap.text-right = format_number(fuel_entry.consumption) if fuel_entry.consumption
+
+#mileage-chart style="height: 800px;"
+
+script id="mileage-data" type="application/json" charset="utf-8"
+  == MultiJson.dump(FuelEntry.chart_data, pretty: false)

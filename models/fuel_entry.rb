@@ -68,6 +68,12 @@ class FuelEntry < Sequel::Model
         o.consumption  = 100.0 / o.trips * o.liters
       end
     end
+
+    def chart_data
+      order(:paid_on, :id).map do |fuel_entry|
+        [fuel_entry.paid_on, fuel_entry.odometer]
+      end
+    end
   end
 
   #########################
