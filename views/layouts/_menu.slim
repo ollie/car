@@ -1,5 +1,5 @@
 nav.navbar.navbar-expand-lg.navbar-light.bg-light
-  a.navbar-brand href="/fuel_entries"
+  a.navbar-brand href=fuel_entries_path
     /
       span.mr-2
         == icon(:dashboard)
@@ -11,6 +11,6 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
   .collapse.navbar-collapse id="navbar-collapse"
     ul.navbar-nav.mr-auto
       li.nav-item class=('active' if request.path =~ %r{^/fuel_entries})
-        a.nav-link href="/fuel_entries" Tankování
+        a.nav-link href=fuel_entries_path Tankování
       li.nav-item class=('active' if request.path =~ %r{^/service_entries})
-        a.nav-link href="/service_entries" Servis
+        a.nav-link href=service_entries_path Servis
