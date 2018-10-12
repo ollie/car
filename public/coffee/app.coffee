@@ -56,6 +56,20 @@ class FuelEntryForm
 
 
 
+class ServiceEntryForm
+  constructor: ->
+    @priceInput   = $('#service-entry-price')
+    @expenseInput = $('#service-entry-expense')
+
+    return unless @priceInput.length
+
+    @priceInput.on('input', this._handleInput)
+
+  _handleInput: =>
+    @expenseInput.val(@priceInput.val())
+
+
+
 class HighchartsConfig
   constructor: ->
     Highcharts.setOptions
@@ -132,5 +146,6 @@ $ ->
   new Confirm
   new Toggle
   new FuelEntryForm
+  new ServiceEntryForm
   new HighchartsConfig
   new MileageGraph
