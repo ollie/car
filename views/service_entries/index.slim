@@ -25,12 +25,15 @@ table.table.table-hover
         td.text-nowrap
           a href=edit_service_entry_path(service_entry.id)
             = l(service_entry.date)
-        td = service_entry.title
+        td
+          = service_entry.title
+          a.ml-1< href="" data-toggle-target="#note-#{service_entry.id}"
+            == icon(:info)
         td.text-nowrap.text-right = format_number(service_entry.odometer, format: '%d') if service_entry.odometer
         td.text-nowrap.text-right = format_number(service_entry.price)
         td.text-nowrap.text-right = format_number(service_entry.expense)
       - if service_entry.note && !service_entry.note.empty?
-        tr
+        tr.d-none id="note-#{service_entry.id}"
           / TODO: Some HTML styling
           td colspan="5"
             small = service_entry.note

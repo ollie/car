@@ -12,6 +12,22 @@ class Confirm
 
 
 
+class Toggle
+  constructor: ->
+    $items = $('[data-toggle-target]')
+
+    $items.on('click', this._handleClick)
+
+  _handleClick: (e) =>
+    e.preventDefault()
+
+    $source = $(e.currentTarget)
+    $target = $($source.data('toggle-target'))
+
+    $target.toggleClass('d-none')
+
+
+
 class FuelEntryForm
   constructor: ->
     @odometerInput = $('#fuel-entry-odometer')
@@ -114,6 +130,7 @@ class MileageGraph
 
 $ ->
   new Confirm
+  new Toggle
   new FuelEntryForm
   new HighchartsConfig
   new MileageGraph
