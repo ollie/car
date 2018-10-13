@@ -46,7 +46,8 @@
 
   FuelEntryForm = (function() {
     function FuelEntryForm() {
-      this._handleInput = bind(this._handleInput, this);
+      this._handleUnitPrice = bind(this._handleUnitPrice, this);
+      this._handleOdometerInput = bind(this._handleOdometerInput, this);
       var $previousOdometer;
       this.odometerInput = $('#fuel-entry-odometer');
       if (!this.odometerInput.length) {
@@ -59,10 +60,15 @@
       this.previousOdometer = $previousOdometer.data('value');
       this.tripWrapper = $('#fuel-entry-trip');
       this.tripSpan = this.tripWrapper.find('span');
-      this.odometerInput.on('input', this._handleInput);
+      this.litersInput = $('#fuel-entry-liters');
+      this.totalPriceInput = $('#fuel-entry-total_price');
+      this.unitPriceWrapper = $('#fuel-entry-unit-price');
+      this.unitPriceSpan = this.unitPriceWrapper.find('span');
+      this.odometerInput.on('input', this._handleOdometerInput);
+      this.litersInput.add(this.totalPriceInput).on('input', this._handleUnitPrice);
     }
 
-    FuelEntryForm.prototype._handleInput = function() {
+    FuelEntryForm.prototype._handleOdometerInput = function() {
       var odometer, trip;
       odometer = this.odometerInput.val();
       trip = odometer - this.previousOdometer;
@@ -72,6 +78,26 @@
         this.tripSpan.text(trip);
         return this.tripWrapper.removeClass('d-none');
       }
+    };
+
+    FuelEntryForm.prototype._handleUnitPrice = function() {
+      var liters, parts, totalPrice, unitPrice;
+      liters = this.litersInput.val();
+      totalPrice = this.totalPriceInput.val();
+      if (!(liters && totalPrice)) {
+        return;
+      }
+      liters = Number(liters);
+      totalPrice = Number(totalPrice);
+      if (liters === 0) {
+        return;
+      }
+      unitPrice = totalPrice / liters;
+      parts = unitPrice.toFixed(2).split('.');
+      parts[0] = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+      unitPrice = parts.join(',');
+      this.unitPriceSpan.text(unitPrice);
+      return this.unitPriceWrapper.removeClass('d-none');
     };
 
     return FuelEntryForm;

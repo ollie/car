@@ -45,8 +45,8 @@ form action=url method="post"
   .form-group.row
     span.col-sm-4.col-form-label Denní počítadlo
     .col-sm-8
-      #fuel-entry-trip.form-control-plaintext.d-none
-        span>
+      #fuel-entry-trip.form-control-plaintext class=('d-none' if fuel_entry.new?)
+        span> = fuel_entry.trip if fuel_entry.trip
         | Km
 
   .form-group.row
@@ -84,6 +84,13 @@ form action=url method="post"
           span.input-group-text Kč
         - if fuel_entry.errors.on(:total_price)
           .invalid-feedback = fuel_entry.errors.on(:total_price).join(', ')
+
+  .form-group.row
+    span.col-sm-4.col-form-label Cena za litr
+    .col-sm-8
+      #fuel-entry-unit-price.form-control-plaintext class=('d-none' if fuel_entry.new?)
+        span> = format_number(fuel_entry.unit_price) if fuel_entry.unit_price
+        | Kč
 
   .form-group.row
     label.col-sm-4.col-form-label for="fuel-entry-note" Poznámka
