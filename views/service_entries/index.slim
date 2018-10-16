@@ -27,8 +27,9 @@ table.table.table-hover
             = l(service_entry.date)
         td
           = service_entry.title
-          a.ml-1< href="" data-toggle-target="#note-#{service_entry.id}"
-            == icon(:info)
+          - if service_entry.note && !service_entry.note.empty?
+            a.ml-1< href="" data-toggle-target="#note-#{service_entry.id}"
+              == icon(:info)
         td.text-nowrap.text-right = format_number(service_entry.odometer, format: '%d') if service_entry.odometer
         td.text-nowrap.text-right = format_number(service_entry.price)
         td.text-nowrap.text-right = format_number(service_entry.expense)
