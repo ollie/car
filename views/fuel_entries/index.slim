@@ -43,3 +43,5 @@ table.table.table-hover.mb-5
 
 script id="mileage-data" type="application/json" charset="utf-8"
   == MultiJson.dump(FuelEntry.chart_data, pretty: false)
+
+p.mt-4.mb-0.alert.alert-warning.text-center Další výměna oleje vychází na #{l(FuelEntry.next_oil_change_date)}.
