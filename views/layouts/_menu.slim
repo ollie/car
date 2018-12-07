@@ -8,7 +8,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
 
   .collapse.navbar-collapse id="navbar-collapse"
     ul.navbar-nav.mr-auto
-      li.nav-item class=('active' if request.path =~ %r{^/fuel_entries})
+      li.nav-item class=('active' if request.path =~ %r{^#{fuel_entries_path}})
         a.nav-link href=fuel_entries_path Tankování
-      li.nav-item class=('active' if request.path =~ %r{^/service_entries})
+      li.nav-item class=('active' if request.path =~ %r{^#{service_entries_path}})
         a.nav-link href=service_entries_path Servis
