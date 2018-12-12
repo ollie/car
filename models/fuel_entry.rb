@@ -8,36 +8,6 @@ class FuelEntry < Sequel::Model
   plugin :translated_validation_messages
   plugin :defaults_setter
 
-  #############
-  # Validations
-  #############
-
-  def validate
-    super
-
-    validates_presence [
-      :paid_on,
-      :odometer,
-      :liters,
-      :total_price
-    ]
-  end
-
-  ###########
-  # Callbacks
-  ###########
-
-  def before_save
-    calculate_unit_price
-
-    if previous_fuel_entry
-      calculate_trip
-      calculate_price_per_km_and_consumption
-    end
-
-    super
-  end
-
   ###############
   # Class methods
   ###############
@@ -89,14 +59,6 @@ class FuelEntry < Sequel::Model
     end
   end
 
-  #########################
-  # Public instance methods
-  #########################
-
-  def previous
-    model.ordered.where(Sequel.lit('id < ?', id)).first
-  end
-
   #################
   # Dataset methods
   #################
@@ -107,11 +69,49 @@ class FuelEntry < Sequel::Model
     end
   end
 
+  #############
+  # Validations
+  #############
+
+  def validate
+    super
+
+    validates_presence [
+      :paid_on,
+      :odometer,
+      :liters,
+      :total_price
+    ]
+  end
+
+  ###########
+  # Callbacks
+  ###########
+
+  def before_save
+    calculate_unit_price
+
+    if previous_fuel_entry
+      calculate_trip
+      calculate_price_per_km_and_consumption
+    end
+
+    super
+  end
+
+  #########################
+  # Public instance methods
+  #########################
+
+  def previous
+    model.ordered.where(Sequel.lit('id < ?', id)).first
+  end
+
+  private
+
   ##########################
   # Private instance methods
   ##########################
-
-  private
 
   def previous_fuel_entry
     @previous_fuel_entry ||=

@@ -8,21 +8,6 @@ class ServiceEntry < Sequel::Model
   plugin :translated_validation_messages
   plugin :defaults_setter
 
-  #############
-  # Validations
-  #############
-
-  def validate
-    super
-
-    validates_presence [
-      :title,
-      :date,
-      :price,
-      :expense
-    ]
-  end
-
   ###############
   # Class methods
   ###############
@@ -55,5 +40,20 @@ class ServiceEntry < Sequel::Model
     def ordered
       order(Sequel.desc(:date), Sequel.desc(:id))
     end
+  end
+
+  #############
+  # Validations
+  #############
+
+  def validate
+    super
+
+    validates_presence [
+      :title,
+      :date,
+      :price,
+      :expense
+    ]
   end
 end
