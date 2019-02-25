@@ -28,8 +28,12 @@ Sequel.migration do
       column :price, 'numeric(9,2)', null: false
       column :expense, 'numeric(9,2)', null: false
       column :note, 'text'
+      column :engine_oil_change, 'boolean', default: false, null: false
+      column :transmission_oil_change, 'boolean', default: false, null: false
 
       index [:date]
+      index [:engine_oil_change]
+      index [:transmission_oil_change]
     end
   end
 end

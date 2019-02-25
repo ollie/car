@@ -91,5 +91,21 @@ form action=url method="post"
 
   .form-group.row
     .offset-sm-4.col-sm-8
+      .form-check
+        input type="hidden" name="service_entry[engine_oil_change]" value="0"
+        input.form-check-input type="checkbox" id="service-entry-engine_oil_change" name="service_entry[engine_oil_change]" value="1" checked=service_entry.engine_oil_change
+        label.form-check-label for="service-entry-engine_oil_change"
+          | Výměna oleje v motoru?
+
+  .form-group.row
+    .offset-sm-4.col-sm-8
+      .form-check
+        input type="hidden" name="service_entry[transmission_oil_change]" value="0"
+        input.form-check-input type="checkbox" id="service-entry-transmission_oil_change" name="service_entry[transmission_oil_change]" value="1" checked=service_entry.transmission_oil_change
+        label.form-check-label for="service-entry-transmission_oil_change"
+          | Výměna oleje v převodovce?
+
+  .form-group.row
+    .offset-sm-4.col-sm-8
       button.btn.btn-outline-primary> = (locals[:edit] ? 'Uložit' : 'Přidat')
       a.btn.btn-outline-secondary href=service_entries_path Storno

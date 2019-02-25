@@ -46,16 +46,28 @@ class FuelEntry < Sequel::Model
     end
 
     def next_oil_change_date
-      last_oil_change = ServiceEntry.with_pk(1)
-      last_refuelling = where(full: true).ordered.first
+      last_oil_change = ServiceEntry.ordered.first(engine_oil_change: true)
+
+      return unless last_oil_change
+
+      last_refuelling = ordered.first(full: true)
 
       return unless last_oil_change && last_refuelling
 
       days_since_last_oil_change     = (last_refuelling.paid_on - last_oil_change.date).to_i
       distance_since_last_oil_change = last_refuelling.odometer - last_oil_change.odometer
+
+      return if distance_since_last_oil_change.zero?
+
       days_until_next_oil_change     = (10_000.0 / distance_since_last_oil_change * days_since_last_oil_change).to_i
       next_oil_change_date           = last_oil_change.date + days_until_next_oil_change
-      next_oil_change_date
+      year_later_oil_change_date     = last_oil_change.date.next_year
+
+      if next_oil_change_date > year_later_oil_change_date
+        year_later_oil_change_date
+      else
+        next_oil_change_date
+      end
     end
   end
 

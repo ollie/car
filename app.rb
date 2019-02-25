@@ -190,7 +190,7 @@ class App < Sinatra::Base
 
   post '/service_entries/new' do
     service_entry = ServiceEntry.new
-    service_entry.set_fields(params[:service_entry], [:title, :date, :odometer, :price, :expense, :note])
+    service_entry.set_fields(params[:service_entry], [:title, :date, :odometer, :price, :expense, :note, :engine_oil_change, :transmission_oil_change])
 
     if service_entry.valid?
       service_entry.save
@@ -210,7 +210,7 @@ class App < Sinatra::Base
 
   post '/service_entries/:id/edit' do
     service_entry = ServiceEntry.with_pk!(params[:id])
-    service_entry.set_fields(params[:service_entry], [:title, :date, :odometer, :price, :expense, :note])
+    service_entry.set_fields(params[:service_entry], [:title, :date, :odometer, :price, :expense, :note, :engine_oil_change, :transmission_oil_change])
 
     if service_entry.valid?
       service_entry.save
