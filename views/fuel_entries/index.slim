@@ -45,4 +45,7 @@ script id="mileage-data" type="application/json" charset="utf-8"
   == MultiJson.dump(FuelEntry.chart_data, pretty: false)
 
 - if FuelEntry.next_oil_change_date
-  p.mt-4.mb-0.alert.alert-warning.text-center Další výměna oleje vychází na #{l(FuelEntry.next_oil_change_date)}.
+  ul.mt-4.mb-0.alert.alert-warning.text-center.list-unstyled
+    li Další výměna oleje: <strong>#{l(FuelEntry.next_oil_change_date.fetch(:effective))}</strong>.
+    li 10&nbsp;000 km od poslední výměny: #{l(FuelEntry.next_oil_change_date.fetch(:predicted))}.
+    li Výměna po roce: #{l(FuelEntry.next_oil_change_date.fetch(:yearly))}.

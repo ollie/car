@@ -62,12 +62,18 @@ class FuelEntry < Sequel::Model
       days_until_next_oil_change     = (10_000.0 / distance_since_last_oil_change * days_since_last_oil_change).to_i
       next_oil_change_date           = last_oil_change.date + days_until_next_oil_change
       year_later_oil_change_date     = last_oil_change.date.next_year
+      effective_change_date =
+        if next_oil_change_date > year_later_oil_change_date
+          year_later_oil_change_date
+        else
+          next_oil_change_date
+        end
 
-      if next_oil_change_date > year_later_oil_change_date
-        year_later_oil_change_date
-      else
-        next_oil_change_date
-      end
+      {
+        predicted: next_oil_change_date,
+        yearly:    year_later_oil_change_date,
+        effective: effective_change_date
+      }
     end
   end
 
