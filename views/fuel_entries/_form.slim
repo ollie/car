@@ -38,7 +38,7 @@ form action=url method="post"
         - if fuel_entry.errors.on(:odometer)
           .invalid-feedback = fuel_entry.errors.on(:odometer).join(', ')
         - if previous_fuel_entry
-          .form-control-plaintext.small
+          .form-text.small.w-100
             | Předchozí stav #{l(previous_fuel_entry.paid_on)} byl
             span#previous-fuel-entry-odometer< data-value=previous_fuel_entry.odometer = "#{format_number(previous_fuel_entry.odometer, format: '%d')} Km."
 
