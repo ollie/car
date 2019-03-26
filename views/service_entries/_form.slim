@@ -107,5 +107,5 @@ form action=url method="post"
 
   .form-group.row
     .offset-sm-4.col-sm-8
-      button.btn.btn-outline-primary> = (locals[:edit] ? 'Uložit' : 'Přidat')
+      button.btn.btn-outline-primary> = service_entry.new? ? 'Přidat' : 'Uložit'
       a.btn.btn-outline-secondary href=service_entries_path Storno
