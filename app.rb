@@ -11,65 +11,9 @@ class App < Sinatra::Base
   set :sessions, expire_after: 14.days
   set :session_secret, Settings.secrets.session_secret
 
-  def self.Route(hash)
-    route_name = hash.keys.first
-    route_path = hash[route_name]
-
-    helpers do
-      define_method("#{route_name}_path") do |id = nil|
-        if route_path =~ /:id/
-          raise ArgumentError, "Missing :id parameter for route #{route_path}" unless id
-          route_path.gsub(':id', id.to_s)
-        else
-          route_path
-        end
-      end
-    end
-
-    route_path
-  end
-
-  helpers do
-    def partial_slim(template, locals = {})
-      slim(template.to_sym, layout: false, locals: locals)
-    end
-
-    def title(text = nil, head: false)
-      return @title = text if text
-      return [@title, t('title')].compact.join(' – ') if head
-
-      @title
-    end
-
-    def icon(filename)
-      @@icon_cache ||= {}
-      @@icon_cache[filename] ||= begin
-        svg = Settings.root.join('public/svg/octicons', "#{filename}.svg").read
-        %(<span class="octicon">#{svg}</span>)
-      end
-    end
-
-    def t(key, options = nil)
-      I18n.t(key, options)
-    end
-
-    def l(key, options = nil)
-      if options
-        I18n.l(key, **options)
-      else
-        I18n.l(key)
-      end
-    end
-
-    def format_number(number, format: '%.02f')
-      format(format, number).tap do |s|
-        s.reverse!
-        s.gsub!(/(\d{3})(\d)/, '\1 \2')
-        s.tr!('.', ',')
-        s.reverse!
-      end
-    end
-  end
+  register Sinatra::Routing
+  helpers Sinatra::CommonHelpers
+  helpers Sinatra::AppHelpers
 
   #######
   # Hooks
