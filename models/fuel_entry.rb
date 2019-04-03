@@ -45,33 +45,42 @@ class FuelEntry < Sequel::Model
       end
     end
 
-    def next_oil_change_date
-      last_oil_change = ServiceEntry.ordered.first(engine_oil_change: true)
+    def next_engine_oil_change_date
+      next_change_date(
+        last_change: ServiceEntry.ordered.first(engine_oil_change: true),
+        distance_interval: 10_000,
+        years_interval: 1
+      )
+    end
 
-      return unless last_oil_change
+    def next_transmission_oil_change_date
+      next_change_date(
+        last_change: ServiceEntry.ordered.first(transmission_oil_change: true),
+        distance_interval: 60_000,
+        years_interval: 4
+      )
+    end
+
+    def next_change_date(last_change:, distance_interval:, years_interval:)
+      return unless last_change
 
       last_refuelling = ordered.first(full: true)
 
-      return unless last_oil_change && last_refuelling
+      return unless last_change && last_refuelling
 
-      days_since_last_oil_change     = (last_refuelling.paid_on - last_oil_change.date).to_i
-      distance_since_last_oil_change = last_refuelling.odometer - last_oil_change.odometer
+      days_since_last_change     = (last_refuelling.paid_on - last_change.date).to_i
+      distance_since_last_change = last_refuelling.odometer - last_change.odometer
 
-      return if distance_since_last_oil_change.zero?
+      return if days_since_last_change < 0 || distance_since_last_change <= 0
 
-      days_until_next_oil_change     = (10_000.0 / distance_since_last_oil_change * days_since_last_oil_change).to_i
-      next_oil_change_date           = last_oil_change.date + days_until_next_oil_change
-      year_later_oil_change_date     = last_oil_change.date.next_year
-      effective_change_date =
-        if next_oil_change_date > year_later_oil_change_date
-          year_later_oil_change_date
-        else
-          next_oil_change_date
-        end
+      days_to_next_change   = (distance_interval.to_f / distance_since_last_change * days_since_last_change).to_i
+      next_change_date      = last_change.date + days_to_next_change
+      scheduled_change_date = last_change.date.next_year(years_interval)
+      effective_change_date = [next_change_date, scheduled_change_date].min
 
       {
-        predicted: next_oil_change_date,
-        yearly:    year_later_oil_change_date,
+        predicted: next_change_date,
+        scheduled: scheduled_change_date,
         effective: effective_change_date
       }
     end

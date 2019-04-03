@@ -44,8 +44,19 @@ table.table.table-hover.mb-5
 script id="mileage-data" type="application/json" charset="utf-8"
   == MultiJson.dump(FuelEntry.chart_data, pretty: false)
 
-- if FuelEntry.next_oil_change_date
-  ul.mt-4.mb-0.alert.alert-warning.text-center.list-unstyled
-    li Další výměna oleje: <strong>#{l(FuelEntry.next_oil_change_date.fetch(:effective))}</strong>.
-    li 10&nbsp;000 km od poslední výměny: #{l(FuelEntry.next_oil_change_date.fetch(:predicted))}.
-    li Výměna po roce: #{l(FuelEntry.next_oil_change_date.fetch(:yearly))}.
+- next_engine_oil_change_date       = FuelEntry.next_engine_oil_change_date
+- next_transmission_oil_change_date = FuelEntry.next_transmission_oil_change_date
+
+- if next_engine_oil_change_date || next_transmission_oil_change_date
+  .mt-4.mb-0.alert.alert-warning.text-center
+    - if next_engine_oil_change_date
+      ul.list-unstyled class=('mb-0' unless next_transmission_oil_change_date)
+        li Další výměna oleje motoru: <strong>#{l(next_engine_oil_change_date.fetch(:effective))}</strong>.
+        li 10&nbsp;000 km od poslední výměny: #{l(next_engine_oil_change_date.fetch(:predicted))}.
+        li Výměna po roce: #{l(next_engine_oil_change_date.fetch(:scheduled))}.
+
+    - if next_transmission_oil_change_date
+      ul.mb-0.list-unstyled
+        li Další výměna oleje v převodovce: <strong>#{l(next_transmission_oil_change_date.fetch(:effective))}</strong>.
+        li 60&nbsp;000 km od poslední výměny: #{l(next_transmission_oil_change_date.fetch(:predicted))}.
+        li Výměna po 4 letech: #{l(next_transmission_oil_change_date.fetch(:scheduled))}.
