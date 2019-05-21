@@ -105,7 +105,7 @@ class App < Sinatra::Base
       fuel_entry.save
       redirect fuel_entries_path
     else
-      slim :'fuel_entries/new', locals: {
+      slim :'fuel_entries/edit', locals: {
         fuel_entry: fuel_entry,
         previous_fuel_entry: fuel_entry.previous
       }
@@ -164,9 +164,8 @@ class App < Sinatra::Base
       service_entry.save
       redirect service_entries_path
     else
-      slim :'service_entries/new', locals: {
-        service_entry: service_entry,
-        previous_service_entry: service_entry.previous
+      slim :'service_entries/edit', locals: {
+        service_entry: service_entry
       }
     end
   end
