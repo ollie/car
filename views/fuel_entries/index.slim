@@ -8,6 +8,7 @@ table.table.table-hover.mb-5
   thead.thead-light
     tr
       th Datum
+      th.text-center Dní
       th.text-right Celkem
       th.text-right Km
       th.text-right Litrů
@@ -15,22 +16,24 @@ table.table.table-hover.mb-5
       th.text-right Kč/l
       th.text-right Kč/km
       th.text-right Ø/l
-    - if FuelEntry.stats
+    - if fuel_entry_stats.calculate?
       tr.small
-        th.text-nowrap.font-weight-normal = "#{format_number(FuelEntry.stats.entries, format: '%d')} tankování"
+        th.text-nowrap.font-weight-normal = "#{format_number(fuel_entry_stats.entries, format: '%d')} tankování"
         th
-        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.trips, format: '%d')
-        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.liters)
-        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.total_price)
-        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.unit_price)
-        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.price_per_km)
-        th.text-nowrap.text-right.font-weight-normal = format_number(FuelEntry.stats.consumption)
+        th
+        th.text-nowrap.text-right.font-weight-normal = format_number(fuel_entry_stats.trips, format: '%d')
+        th.text-nowrap.text-right.font-weight-normal = format_number(fuel_entry_stats.liters)
+        th.text-nowrap.text-right.font-weight-normal = format_number(fuel_entry_stats.total_price)
+        th.text-nowrap.text-right.font-weight-normal = format_number(fuel_entry_stats.unit_price)
+        th.text-nowrap.text-right.font-weight-normal = format_number(fuel_entry_stats.price_per_km)
+        th.text-nowrap.text-right.font-weight-normal = format_number(fuel_entry_stats.consumption)
   tbody
     - FuelEntry.ordered.each do |fuel_entry|
       tr
         td.text-nowrap
           a href=edit_fuel_entry_path(fuel_entry.id)
             = l(fuel_entry.paid_on)
+        td.text-nowrap.text-center = fuel_entry.days_since_previous_entry if fuel_entry.days_since_previous_entry
         td.text-nowrap.text-right = format_number(fuel_entry.odometer, format: '%d')
         td.text-nowrap.text-right = format_number(fuel_entry.trip, format: '%d') if fuel_entry.trip
         td.text-nowrap.text-right = format_number(fuel_entry.liters)
@@ -42,21 +45,18 @@ table.table.table-hover.mb-5
 #mileage-chart style="height: 800px;"
 
 script id="mileage-data" type="application/json" charset="utf-8"
-  == MultiJson.dump(FuelEntry.chart_data, pretty: false)
+  == MultiJson.dump(fuel_entry_graph.chart_data, pretty: false)
 
-- next_engine_oil_change_date       = FuelEntry.next_engine_oil_change_date
-- next_transmission_oil_change_date = FuelEntry.next_transmission_oil_change_date
-
-- if next_engine_oil_change_date || next_transmission_oil_change_date
+- if fuel_entry_graph.next_engine_oil_change_date || fuel_entry_graph.next_transmission_oil_change_date
   .mt-4.mb-0.alert.alert-warning.text-center
-    - if next_engine_oil_change_date
-      ul.list-unstyled class=('mb-0' unless next_transmission_oil_change_date)
-        li Další výměna oleje motoru: <strong>#{l(next_engine_oil_change_date.fetch(:effective))}</strong>.
-        li 10&nbsp;000 km od poslední výměny: #{l(next_engine_oil_change_date.fetch(:predicted))}.
-        li Výměna po roce: #{l(next_engine_oil_change_date.fetch(:scheduled))}.
+    - if fuel_entry_graph.next_engine_oil_change_date
+      ul.list-unstyled class=('mb-0' unless fuel_entry_graph.next_transmission_oil_change_date)
+        li Další výměna oleje motoru: <strong>#{l(fuel_entry_graph.next_engine_oil_change_date.fetch(:effective))}</strong>.
+        li 10&nbsp;000 km od poslední výměny: #{l(fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted))}.
+        li Výměna po roce: #{l(fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled))}.
 
-    - if next_transmission_oil_change_date
+    - if fuel_entry_graph.next_transmission_oil_change_date
       ul.mb-0.list-unstyled
-        li Další výměna oleje v převodovce: <strong>#{l(next_transmission_oil_change_date.fetch(:effective))}</strong>.
-        li 60&nbsp;000 km od poslední výměny: #{l(next_transmission_oil_change_date.fetch(:predicted))}.
-        li Výměna po 4 letech: #{l(next_transmission_oil_change_date.fetch(:scheduled))}.
+        li Další výměna oleje v převodovce: <strong>#{l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:effective))}</strong>.
+        li 60&nbsp;000 km od poslední výměny: #{l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted))}.
+        li Výměna po 4 letech: #{l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled))}.

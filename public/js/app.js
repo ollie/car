@@ -49,17 +49,16 @@
         return;
       }
       $previousOdometer = $('#previous-fuel-entry-odometer');
-      if (!$previousOdometer.length) {
-        return;
+      if ($previousOdometer.length) {
+        this.previousOdometer = $previousOdometer.data('value');
+        this.tripWrapper = $('#fuel-entry-trip');
+        this.tripSpan = this.tripWrapper.find('span');
+        this.odometerInput.on('input', this._handleOdometerInput);
       }
-      this.previousOdometer = $previousOdometer.data('value');
-      this.tripWrapper = $('#fuel-entry-trip');
-      this.tripSpan = this.tripWrapper.find('span');
       this.litersInput = $('#fuel-entry-liters');
       this.totalPriceInput = $('#fuel-entry-total_price');
       this.unitPriceWrapper = $('#fuel-entry-unit-price');
       this.unitPriceSpan = this.unitPriceWrapper.find('span');
-      this.odometerInput.on('input', this._handleOdometerInput);
       this.litersInput.add(this.totalPriceInput).on('input', this._handleUnitPrice);
     }
 

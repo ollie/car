@@ -42,12 +42,13 @@ form action=url method="post"
             | Předchozí stav #{l(previous_fuel_entry.paid_on)} byl
             span#previous-fuel-entry-odometer< data-value=previous_fuel_entry.odometer = "#{format_number(previous_fuel_entry.odometer, format: '%d')} Km."
 
-  .form-group.row
-    span.col-sm-4.col-form-label Denní počítadlo
-    .col-sm-8
-      #fuel-entry-trip.form-control-plaintext class=('d-none' if fuel_entry.new?)
-        span> = fuel_entry.trip if fuel_entry.trip
-        | Km
+  - if FuelEntry.count > 1
+    .form-group.row
+      span.col-sm-4.col-form-label Denní počítadlo
+      .col-sm-8
+        #fuel-entry-trip.form-control-plaintext class=('d-none' if fuel_entry.new?)
+          span> = fuel_entry.trip if fuel_entry.trip
+          | Km
 
   .form-group.row
     label.col-sm-4.col-form-label for="fuel-entry-liters" Litrů benzínu
@@ -88,7 +89,7 @@ form action=url method="post"
   .form-group.row
     span.col-sm-4.col-form-label Cena za litr
     .col-sm-8
-      #fuel-entry-unit-price.form-control-plaintext class=('d-none' if fuel_entry.new?)
+      #fuel-entry-unit-price.form-control-plaintext class=('d-none' if fuel_entry.unit_price.zero?)
         span> = format_number(fuel_entry.unit_price) if fuel_entry.unit_price
         | Kč
 

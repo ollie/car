@@ -62,7 +62,10 @@ class App < Sinatra::Base
     if FuelEntry.count.zero?
       redirect new_fuel_entry_path
     else
-      slim :'fuel_entries/index'
+      slim :'fuel_entries/index', locals: {
+        fuel_entry_stats: FuelEntryStats.new,
+        fuel_entry_graph: FuelEntryGraph.new
+      }
     end
   end
 
@@ -126,7 +129,9 @@ class App < Sinatra::Base
     if ServiceEntry.count.zero?
       redirect new_service_entry_path
     else
-      slim :'service_entries/index'
+      slim :'service_entries/index', locals: {
+        service_entry_stats: ServiceEntryStats.new
+      }
     end
   end
 

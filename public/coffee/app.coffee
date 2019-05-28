@@ -36,18 +36,18 @@ class FuelEntryForm
 
     $previousOdometer = $('#previous-fuel-entry-odometer')
 
-    return unless $previousOdometer.length
+    if $previousOdometer.length
+      @previousOdometer = $previousOdometer.data('value')
+      @tripWrapper      = $('#fuel-entry-trip')
+      @tripSpan         = @tripWrapper.find('span')
 
-    @previousOdometer = $previousOdometer.data('value')
-    @tripWrapper      = $('#fuel-entry-trip')
-    @tripSpan         = @tripWrapper.find('span')
+      @odometerInput.on('input', this._handleOdometerInput)
 
     @litersInput      = $('#fuel-entry-liters')
     @totalPriceInput  = $('#fuel-entry-total_price')
     @unitPriceWrapper = $('#fuel-entry-unit-price')
     @unitPriceSpan    = @unitPriceWrapper.find('span')
 
-    @odometerInput.on('input', this._handleOdometerInput)
     @litersInput.add(@totalPriceInput).on('input', this._handleUnitPrice)
 
   _handleOdometerInput: =>

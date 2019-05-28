@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Sequel.migration do
   change do
     create_table(:fuel_entries) do
@@ -5,12 +7,8 @@ Sequel.migration do
       column :paid_on, 'date', null: false
       column :full, 'boolean', default: true, null: false
       column :odometer, 'integer', null: false
-      column :trip, 'integer'
       column :liters, 'numeric(5,2)', null: false
       column :total_price, 'numeric(7,2)', null: false
-      column :unit_price, 'numeric(5,2)', null: false
-      column :price_per_km, 'numeric(4,2)'
-      column :consumption, 'numeric(5,2)'
       column :note, 'character varying(255)'
 
       index [:paid_on]

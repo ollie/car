@@ -16,74 +16,6 @@ class FuelEntry < Sequel::Model
     def new_with_defaults
       new(paid_on: Date.today)
     end
-
-    def stats
-      return unless count > 1
-
-      @stats ||= OpenStruct.new.tap do |o|
-        row = db[:fuel_entries]
-              .where(Sequel.~(trip: nil))
-              .select(Sequel.lit('count(*)').as(:entries))
-              .select_append { sum(:liters).as(:liters) }
-              .select_append { sum(:trip).as(:trips) }
-              .select_append { sum(:total_price).as(:total_price) }
-              .first
-
-        o.entries      = row.fetch(:entries)
-        o.trips        = row.fetch(:trips)
-        o.liters       = row.fetch(:liters)
-        o.total_price  = row.fetch(:total_price)
-        o.unit_price   = o.total_price / o.liters
-        o.price_per_km = o.total_price / o.trips
-        o.consumption  = 100.0 / o.trips * o.liters
-      end
-    end
-
-    def chart_data
-      order(:paid_on, :id).map do |fuel_entry|
-        [fuel_entry.paid_on, fuel_entry.odometer]
-      end
-    end
-
-    def next_engine_oil_change_date
-      next_change_date(
-        last_change: ServiceEntry.ordered.first(engine_oil_change: true),
-        distance_interval: 10_000,
-        years_interval: 1
-      )
-    end
-
-    def next_transmission_oil_change_date
-      next_change_date(
-        last_change: ServiceEntry.ordered.first(transmission_oil_change: true),
-        distance_interval: 60_000,
-        years_interval: 4
-      )
-    end
-
-    def next_change_date(last_change:, distance_interval:, years_interval:)
-      return unless last_change
-
-      last_refuelling = ordered.first(full: true)
-
-      return unless last_change && last_refuelling
-
-      days_since_last_change     = (last_refuelling.paid_on - last_change.date).to_i
-      distance_since_last_change = last_refuelling.odometer - last_change.odometer
-
-      return if days_since_last_change < 0 || distance_since_last_change <= 0
-
-      days_to_next_change   = (distance_interval.to_f / distance_since_last_change * days_since_last_change).to_i
-      next_change_date      = last_change.date + days_to_next_change
-      scheduled_change_date = last_change.date.next_year(years_interval)
-      effective_change_date = [next_change_date, scheduled_change_date].min
-
-      {
-        predicted: next_change_date,
-        scheduled: scheduled_change_date,
-        effective: effective_change_date
-      }
-    end
   end
 
   #################
@@ -111,27 +43,76 @@ class FuelEntry < Sequel::Model
     ]
   end
 
-  ###########
-  # Callbacks
-  ###########
-
-  def before_save
-    calculate_unit_price
-
-    if previous_fuel_entry
-      calculate_trip
-      calculate_price_per_km_and_consumption
-    end
-
-    super
-  end
-
   #########################
   # Public instance methods
   #########################
 
   def previous
-    model.ordered.where(Sequel.lit('id < ?', id)).first
+    return @previous if defined?(@previous)
+
+    @previous = model.ordered.where(Sequel.lit('id < ?', id)).first
+  end
+
+  def days_since_previous_entry
+    return unless previous
+
+    @days_since_previous_entry ||= (paid_on - previous.paid_on).to_i
+  end
+
+  def unit_price
+    @unit_price ||=
+      if total_price && liters
+        total_price / liters
+      else
+        0
+      end
+  end
+
+  def trip
+    return @trip if defined?(@trip)
+
+    @trip = nil
+    @trip = odometer - previous_fuel_entry.odometer if previous_fuel_entry && odometer
+  end
+
+  def price_per_km
+    return @price_per_km if defined?(@price_per_km)
+
+    @price_per_km = nil
+
+    return if partial || previous_fuel_entry.nil?
+
+    prices_total = total_price
+    trips_total  = trip
+
+    previous_partial_fuel_entries.each do |fuel_entry|
+      prices_total += fuel_entry.total_price
+      trips_total  += fuel_entry.trip
+    end
+
+    @price_per_km = prices_total / trips_total
+  end
+
+  def consumption
+    return @consumption if defined?(@consumption)
+
+    @consumption = nil
+
+    return if partial || previous_fuel_entry.nil?
+
+    trips_total  = trip
+    liters_total = liters
+
+    previous_partial_fuel_entries.each do |fuel_entry|
+      trips_total  += fuel_entry.trip
+      liters_total += fuel_entry.liters
+    end
+
+    @consumption = 100.0 / trips_total * liters_total
+  end
+
+  def partial
+    !full
   end
 
   private
@@ -149,30 +130,15 @@ class FuelEntry < Sequel::Model
       end
   end
 
-  def calculate_unit_price
-    self.unit_price = total_price / liters
-  end
+  def previous_partial_fuel_entries
+    @previous_partial_fuel_entries ||= [].tap do |fuel_entries|
+      if previous_fuel_entry
+        model.ordered.where(Sequel.lit('id <= ?', previous_fuel_entry.id)).each do |fuel_entry|
+          break if fuel_entry.full
 
-  def calculate_trip
-    self.trip = odometer - previous_fuel_entry.odometer
-  end
-
-  def calculate_price_per_km_and_consumption
-    return unless full
-
-    prices_total = total_price
-    trips_total  = trip
-    liters_total = liters
-
-    model.ordered.where(Sequel.lit('trip IS NOT NULL AND id <= ?', previous_fuel_entry.id)).each do |fuel_entry|
-      break if fuel_entry.full
-
-      prices_total += fuel_entry.total_price
-      trips_total  += fuel_entry.trip
-      liters_total += fuel_entry.liters
+          fuel_entries << fuel_entry
+        end
+      end
     end
-
-    self.price_per_km = prices_total / trips_total
-    self.consumption  = 100.0 / trips_total * liters_total
   end
 end

@@ -12,13 +12,13 @@ table.table.table-hover
       th.text-right Km
       th.text-right Cena
       th.text-right Výdaj
-    - if ServiceEntry.stats
+    - if service_entry_stats.calculate?
       tr
-        th.text-nowrap.font-weight-normal = "#{format_number(ServiceEntry.stats.entries, format: '%d')} záznamů"
+        th.text-nowrap.font-weight-normal = "#{format_number(service_entry_stats.entries, format: '%d')} záznamů"
         th
         th
-        th.text-nowrap.text-right.font-weight-normal = format_number(ServiceEntry.stats.price)
-        th.text-nowrap.text-right.font-weight-normal = format_number(ServiceEntry.stats.expenses)
+        th.text-nowrap.text-right.font-weight-normal = format_number(service_entry_stats.price)
+        th.text-nowrap.text-right.font-weight-normal = format_number(service_entry_stats.expenses)
   tbody
     - ServiceEntry.ordered.each do |service_entry|
       tr
