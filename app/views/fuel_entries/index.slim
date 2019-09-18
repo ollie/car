@@ -51,12 +51,34 @@ script id="mileage-data" type="application/json" charset="utf-8"
   .mt-4.mb-0.alert.alert-warning.text-center
     - if fuel_entry_graph.next_engine_oil_change_date
       ul.list-unstyled class=('mb-0' unless fuel_entry_graph.next_transmission_oil_change_date)
-        li Další výměna oleje motoru: <strong>#{l(fuel_entry_graph.next_engine_oil_change_date.fetch(:effective))}</strong>.
-        li 10&nbsp;000 km od poslední výměny: #{l(fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted))}.
-        li Výměna po roce: #{l(fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled))}.
+        li
+          == 'Výměna po roce: '
+          - if fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled) == fuel_entry_graph.next_engine_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled))
+          - else
+            = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled))
+          | .
+        li
+          == 'Výměna po 10&nbsp;000 km: '
+          - if fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted) == fuel_entry_graph.next_engine_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted))
+          - else
+            = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted))
+          | .
 
     - if fuel_entry_graph.next_transmission_oil_change_date
       ul.mb-0.list-unstyled
-        li Další výměna oleje v převodovce: <strong>#{l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:effective))}</strong>.
-        li 60&nbsp;000 km od poslední výměny: #{l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted))}.
-        li Výměna po 4 letech: #{l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled))}.
+        li
+          == 'Výměna po 4 letech: '
+          - if fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled) == fuel_entry_graph.next_transmission_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled))
+          - else
+            = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled))
+          | .
+        li
+          == 'Výměna po 60&nbsp;000 km: '
+          - if fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted) == fuel_entry_graph.next_transmission_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted))
+          - else
+            = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted))
+          | .
