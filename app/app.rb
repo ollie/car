@@ -72,21 +72,21 @@ class App < Sinatra::Base
 
   get Route(new_fuel_entry: '/fuel_entries/new') do
     slim :'fuel_entries/new', locals: {
-      fuel_entry: FuelEntry.new_with_defaults,
+      fuel_entry:          FuelEntry.new_with_defaults,
       previous_fuel_entry: FuelEntry.ordered.first
     }
   end
 
   post '/fuel_entries/new' do
     fuel_entry = FuelEntry.new
-    fuel_entry.set_fields(params[:fuel_entry], [:full, :paid_on, :odometer, :liters, :total_price, :note])
+    fuel_entry.set_fields(params[:fuel_entry], %i[full paid_on odometer liters total_price note])
 
     if fuel_entry.valid?
       fuel_entry.save
       redirect fuel_entries_path
     else
       slim :'fuel_entries/new', locals: {
-        fuel_entry: fuel_entry,
+        fuel_entry:          fuel_entry,
         previous_fuel_entry: FuelEntry.ordered.first
       }
     end
@@ -96,21 +96,21 @@ class App < Sinatra::Base
     fuel_entry = FuelEntry.with_pk!(params[:id])
 
     slim :'fuel_entries/edit', locals: {
-      fuel_entry: fuel_entry,
+      fuel_entry:          fuel_entry,
       previous_fuel_entry: fuel_entry.previous
     }
   end
 
   post '/fuel_entries/:id/edit' do
     fuel_entry = FuelEntry.with_pk!(params[:id])
-    fuel_entry.set_fields(params[:fuel_entry], [:full, :paid_on, :odometer, :liters, :total_price, :note])
+    fuel_entry.set_fields(params[:fuel_entry], %i[full paid_on odometer liters total_price note])
 
     if fuel_entry.valid?
       fuel_entry.save
       redirect fuel_entries_path
     else
       slim :'fuel_entries/edit', locals: {
-        fuel_entry: fuel_entry,
+        fuel_entry:          fuel_entry,
         previous_fuel_entry: fuel_entry.previous
       }
     end
@@ -144,7 +144,7 @@ class App < Sinatra::Base
 
   post '/service_entries/new' do
     service_entry = ServiceEntry.new
-    service_entry.set_fields(params[:service_entry], [:title, :date, :odometer, :price, :expense, :note, :engine_oil_change, :transmission_oil_change])
+    service_entry.set_fields(params[:service_entry], %i[title date odometer price expense note engine_oil_change transmission_oil_change])
 
     if service_entry.valid?
       service_entry.save
@@ -164,7 +164,7 @@ class App < Sinatra::Base
 
   post '/service_entries/:id/edit' do
     service_entry = ServiceEntry.with_pk!(params[:id])
-    service_entry.set_fields(params[:service_entry], [:title, :date, :odometer, :price, :expense, :note, :engine_oil_change, :transmission_oil_change])
+    service_entry.set_fields(params[:service_entry], %i[title date odometer price expense note engine_oil_change transmission_oil_change])
 
     if service_entry.valid?
       service_entry.save

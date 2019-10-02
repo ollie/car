@@ -35,11 +35,11 @@ class FuelEntry < Sequel::Model
   def validate
     super
 
-    validates_presence [
-      :paid_on,
-      :odometer,
-      :liters,
-      :total_price
+    validates_presence %i[
+      paid_on
+      odometer
+      liters
+      total_price
     ]
   end
 

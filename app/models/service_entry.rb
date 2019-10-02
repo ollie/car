@@ -35,11 +35,11 @@ class ServiceEntry < Sequel::Model
   def validate
     super
 
-    validates_presence [
-      :title,
-      :date,
-      :price,
-      :expense
+    validates_presence %i[
+      title
+      date
+      price
+      expense
     ]
   end
 end

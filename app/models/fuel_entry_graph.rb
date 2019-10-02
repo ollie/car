@@ -7,17 +7,17 @@ class FuelEntryGraph
 
   def next_engine_oil_change_date
     @next_engine_oil_change_date ||= next_change_date(
-      last_change: ServiceEntry.ordered.first(engine_oil_change: true),
+      last_change:       ServiceEntry.ordered.first(engine_oil_change: true),
       distance_interval: 10_000,
-      years_interval: 1
+      years_interval:    1
     )
   end
 
   def next_transmission_oil_change_date
     @next_transmission_oil_change_date ||= next_change_date(
-      last_change: ServiceEntry.ordered.first(transmission_oil_change: true),
+      last_change:       ServiceEntry.ordered.first(transmission_oil_change: true),
       distance_interval: 60_000,
-      years_interval: 4
+      years_interval:    4
     )
   end
 
