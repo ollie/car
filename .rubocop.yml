@@ -1,5 +1,7 @@
 Layout/AlignHash:
-  EnforcedColonStyle: table
+  EnforcedColonStyle:
+    - key
+    - table
 
 Style/ClassAndModuleChildren:
   Enabled: false
