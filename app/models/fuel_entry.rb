@@ -4,6 +4,7 @@ class FuelEntry < Sequel::Model
   # Plugins
   #########
 
+  plugin :paginate
   plugin :validation_helpers
   plugin :translated_validation_messages
   plugin :defaults_setter

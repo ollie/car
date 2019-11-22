@@ -58,10 +58,13 @@ class App < Sinatra::Base
   end
 
   get Route(fuel_entries: '/fuel_entries') do
-    if FuelEntry.count.zero?
+    fuel_entries = FuelEntry.ordered.paginate(params[:page], per_page: 10)
+
+    if fuel_entries.count.zero?
       redirect new_fuel_entry_path
     else
       slim :'fuel_entries/index', locals: {
+        fuel_entries:     fuel_entries,
         fuel_entry_stats: FuelEntryStats.new,
         fuel_entry_graph: FuelEntryGraph.new
       }
@@ -125,10 +128,13 @@ class App < Sinatra::Base
   #################
 
   get Route(service_entries: '/service_entries') do
-    if ServiceEntry.count.zero?
+    service_entries = ServiceEntry.ordered.paginate(params[:page], per_page: 20)
+
+    if service_entries.count.zero?
       redirect new_service_entry_path
     else
       slim :'service_entries/index', locals: {
+        service_entries:     service_entries,
         service_entry_stats: ServiceEntryStats.new
       }
     end

@@ -19,8 +19,8 @@ table.table.table-hover
         th
         th.text-nowrap.text-right.font-weight-normal = format_number(service_entry_stats.price)
         th.text-nowrap.text-right.font-weight-normal = format_number(service_entry_stats.expenses)
-  tbody
-    - ServiceEntry.ordered.each do |service_entry|
+  tbody data-js-component="Toggle"
+    - service_entries.each do |service_entry|
       tr
         td.text-nowrap
           a href=edit_service_entry_path(service_entry.id)
@@ -38,3 +38,5 @@ table.table.table-hover
           / TODO: Some HTML styling
           td colspan="5"
             small = service_entry.note
+
+== partial_slim 'layouts/_pagination', dataset: service_entries

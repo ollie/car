@@ -5,5 +5,5 @@ h1.mt-3.mb-3 = title "Upravit tankování z #{l(fuel_entry.paid_on)}"
     == partial_slim 'fuel_entries/_form', fuel_entry: fuel_entry, previous_fuel_entry: previous_fuel_entry, url: edit_fuel_entry_path(fuel_entry.id)
 
   .col-sm-6.text-right
-    form action=delete_fuel_entry_path(fuel_entry.id) method="post" data-confirm="Opravdu chcete smazat záznam?"
+    form action=delete_fuel_entry_path(fuel_entry.id) method="post" data-js-component="Confirm" data-confirm="Opravdu chcete smazat záznam?"
       input.btn.btn-outline-danger type="submit" value="Smazat"
