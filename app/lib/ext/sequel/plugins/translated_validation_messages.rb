@@ -19,8 +19,12 @@ module Sequel::Plugins::TranslatedValidationMessages
     # }.freeze
     def default_validation_helpers_options(type)
       case type
+      when :integer
+        { message: -> { I18n.t('sequel.errors.integer') } }
       when :presence
         { message: -> { I18n.t('sequel.errors.presence') } }
+      when :unique
+        { message: -> { I18n.t('sequel.errors.unique') } }
       else
         super
       end

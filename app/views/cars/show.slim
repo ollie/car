@@ -1,0 +1,80 @@
+p
+  a.btn.btn-outline-secondary href=cars_path ← Auta
+
+.row.mt-3
+  .col-sm-10
+    h1.mb-3 = title car.name
+  .col-sm-2.text-right
+    a.btn.btn-outline-primary.w-100.mb-3 href=edit_car_path(car.id) Upravit
+
+.row
+  .col-sm-6
+    - if fuel_entries.count.zero?
+      .alert.alert-secondary
+        | Žádný záznam,
+        a< href=new_fuel_entry_path(car.id) přidat
+        | .
+    - else
+      table.table
+        thead.thead-light
+          tr
+            th Tankování
+            th.text-center Dní
+            th.text-right Celkem
+            th.text-right Km
+            th.text-right Litrů
+            th.text-right Kč
+        tbody
+          - fuel_entries.each do |fuel_entry|
+            tr
+              td.text-nowrap = l(fuel_entry.paid_on)
+              td.text-nowrap.text-center = fuel_entry.days_since_previous_entry if fuel_entry.days_since_previous_entry
+              td.text-nowrap.text-right = format_number(fuel_entry.odometer, format: '%d')
+              td.text-nowrap.text-right = format_number(fuel_entry.trip, format: '%d') if fuel_entry.trip
+              td.text-nowrap.text-right = format_number(fuel_entry.liters)
+              td.text-nowrap.text-right = format_number(fuel_entry.total_price)
+          tr
+            td colspan="6"
+              a.btn.btn-outline-primary> href=new_fuel_entry_path(car.id) Přidat tankování
+              | nebo
+              a< href=fuel_entries_path(car.id) seznam všech záznamů
+
+  .col-sm-6
+    - if service_entries.count.zero?
+      .alert.alert-secondary
+        | Žádný záznam,
+        a< href=new_service_entry_path(car.id) přidat
+        | .
+    - else
+      table.table
+        thead.thead-light
+          tr
+            th Servis
+            th Název
+            th.text-right Km
+            th.text-right Cena
+        tbody data-js-component="Toggle"
+          - service_entries.each do |service_entry|
+            tr
+              td.text-nowrap = l(service_entry.date)
+              td
+                - if service_entry.title.size > 25
+                  = "#{service_entry.title[0, 25]}…"
+                - else
+                  = service_entry.title
+              td.text-nowrap.text-right = format_number(service_entry.odometer, format: '%d') if service_entry.odometer
+              td.text-nowrap.text-right = format_number(service_entry.price)
+          tr
+            td colspan="6"
+              a.btn.btn-outline-primary> href=new_service_entry_path(car.id) Přidat servis
+              | nebo
+              a< href=service_entries_path(car.id) seznam všech záznamů
+
+== partial_slim 'cars/_changes_info', car: car, fuel_entry_chart: fuel_entry_chart
+
+- if fuel_entries.count > 1
+  #mileage-chart.mt-5 style="height: 800px;" data-js-component="MileageChart"
+
+  script id="mileage-data" type="application/json" charset="utf-8"
+    == MultiJson.dump(fuel_entry_chart.chart_data, pretty: false)
+

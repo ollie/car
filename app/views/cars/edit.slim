@@ -1,0 +1,12 @@
+p
+  a.btn.btn-outline-secondary href=car_path(car.id) ← Auto
+
+h1.mb-3 = title "Upravit auto #{car.name}"
+
+.row
+  .col-sm-6
+    == partial_slim 'cars/_form', car: car, url: edit_car_path(car.id)
+
+  .col-sm-6.text-right
+    form action=delete_car_path(car.id) method="post" data-js-component="Confirm" data-confirm="Opravdu chcete smazat auto?"
+      input.btn.btn-outline-danger type="submit" value="Smazat"

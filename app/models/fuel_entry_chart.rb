@@ -1,23 +1,29 @@
-class FuelEntryGraph
+class FuelEntryChart
+  attr_accessor :car
+
+  def initialize(car)
+    self.car = car
+  end
+
   def chart_data
-    FuelEntry.order(:paid_on, :id).map do |fuel_entry|
+    car.fuel_entries_dataset.order(:paid_on, :id).map do |fuel_entry|
       [fuel_entry.paid_on, fuel_entry.odometer]
     end
   end
 
   def next_engine_oil_change_date
     @next_engine_oil_change_date ||= next_change_date(
-      last_change:       ServiceEntry.ordered.first(engine_oil_change: true),
-      distance_interval: 10_000,
-      years_interval:    1
+      last_change:       car.service_entries_dataset.first(engine_oil_change: true),
+      distance_interval: car.engine_oil_change_distance_interval,
+      years_interval:    car.engine_oil_change_time_interval
     )
   end
 
   def next_transmission_oil_change_date
     @next_transmission_oil_change_date ||= next_change_date(
-      last_change:       ServiceEntry.ordered.first(transmission_oil_change: true),
-      distance_interval: 60_000,
-      years_interval:    4
+      last_change:       car.service_entries_dataset.first(transmission_oil_change: true),
+      distance_interval: car.transmission_oil_change_distance_interval,
+      years_interval:    car.transmission_oil_change_time_interval
     )
   end
 
@@ -26,7 +32,7 @@ class FuelEntryGraph
   def next_change_date(last_change:, distance_interval:, years_interval:)
     return unless last_change
 
-    last_refuelling = FuelEntry.ordered.first(full: true)
+    last_refuelling = car.fuel_entries_dataset.first(full: true)
 
     return unless last_change && last_refuelling
 

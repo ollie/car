@@ -1,8 +1,11 @@
+p
+  a.btn.btn-outline-secondary href=car_path(car.id) ← Auto
+
 .row.mt-3
   .col-sm-10
-    h1.mb-3 = title 'Tankování'
+    h1.mb-3 = title "#{car.name}: Tankování"
   .col-sm-2.text-right
-    a.btn.btn-outline-primary.w-100.mb-3 href=new_fuel_entry_path Přidat
+    a.btn.btn-outline-primary.w-100.mb-3 href=new_fuel_entry_path(car.id) Přidat
 
 table.table.table-hover
   thead.thead-light
@@ -31,7 +34,7 @@ table.table.table-hover
     - fuel_entries.each do |fuel_entry|
       tr
         td.text-nowrap
-          a href=edit_fuel_entry_path(fuel_entry.id)
+          a href=edit_fuel_entry_path(car.id, fuel_entry.id)
             = l(fuel_entry.paid_on)
         td.text-nowrap.text-center = fuel_entry.days_since_previous_entry if fuel_entry.days_since_previous_entry
         td.text-nowrap.text-right = format_number(fuel_entry.odometer, format: '%d')
@@ -43,44 +46,3 @@ table.table.table-hover
         td.text-nowrap.text-right = format_number(fuel_entry.consumption) if fuel_entry.consumption
 
 == partial_slim 'layouts/_pagination', dataset: fuel_entries
-
-#mileage-chart.mt-5 style="height: 800px;" data-js-component="MileageChart"
-
-script id="mileage-data" type="application/json" charset="utf-8"
-  == MultiJson.dump(fuel_entry_graph.chart_data, pretty: false)
-
-- if fuel_entry_graph.next_engine_oil_change_date || fuel_entry_graph.next_transmission_oil_change_date
-  .mt-4.mb-0.alert.alert-warning.text-center
-    - if fuel_entry_graph.next_engine_oil_change_date
-      ul.list-unstyled class=('mb-0' unless fuel_entry_graph.next_transmission_oil_change_date)
-        li
-          == 'Výměna po roce: '
-          - if fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled) == fuel_entry_graph.next_engine_oil_change_date.fetch(:effective)
-            strong = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled))
-          - else
-            = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:scheduled))
-          | .
-        li
-          == 'Výměna po 10&nbsp;000 km: '
-          - if fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted) == fuel_entry_graph.next_engine_oil_change_date.fetch(:effective)
-            strong = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted))
-          - else
-            = l(fuel_entry_graph.next_engine_oil_change_date.fetch(:predicted))
-          | .
-
-    - if fuel_entry_graph.next_transmission_oil_change_date
-      ul.mb-0.list-unstyled
-        li
-          == 'Výměna po 4 letech: '
-          - if fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled) == fuel_entry_graph.next_transmission_oil_change_date.fetch(:effective)
-            strong = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled))
-          - else
-            = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:scheduled))
-          | .
-        li
-          == 'Výměna po 60&nbsp;000 km: '
-          - if fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted) == fuel_entry_graph.next_transmission_oil_change_date.fetch(:effective)
-            strong = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted))
-          - else
-            = l(fuel_entry_graph.next_transmission_oil_change_date.fetch(:predicted))
-          | .

@@ -65,18 +65,5 @@ module Sinatra
 
       pages
     end
-
-    def t(key, options = nil)
-      I18n.t(key, options)
-    end
-
-    def l(key, options = nil)
-      if options
-        I18n.l(key, **options)
-      else
-        I18n.l(key)
-      end
-    end
-  end
   end
 end

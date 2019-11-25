@@ -1,0 +1,10 @@
+.row
+  .col-sm-10
+    h1.mb-3 = title 'Auta'
+  .col-sm-2.text-right
+    a.btn.btn-outline-primary.w-100.mb-3 href=new_car_path Přidat
+
+.row
+  - cars.each do |car|
+    .col.text-center
+      a.d-block.border.p-4.text-center href=car_path(car.id) = car.name

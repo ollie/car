@@ -1,5 +1,8 @@
+p
+  a.btn.btn-outline-secondary href=service_entries_path(car.id) ← Servis
+
 h1.mt-3.mb-3 = title 'Přidat nový záznam'
 
 .row
   .col-sm-6
-    == partial_slim 'service_entries/_form', service_entry: service_entry, url: new_service_entry_path
+    == partial_slim 'service_entries/_form', car: car, service_entry: service_entry, url: new_service_entry_path(car.id)

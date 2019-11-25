@@ -1,0 +1,35 @@
+p
+  a.btn.btn-outline-secondary href=cars_path ← Auta
+
+h1.mb-3 = title 'Přidat auto'
+
+.row
+  .col-sm-6
+    == partial_slim 'cars/_form', car: car, url: new_car_path
+
+    .alert.alert-warning
+      h2.h4 Subaru Legacy
+      ul
+        li
+          | Olej v motoru:
+          ul
+            li 10 000 km
+            li nebo 1 rok
+        li
+          | Olej v převodovce:
+          ul
+            li 60 000 km
+            li nebo 4 roky
+
+      h2.h4 Lexus IS 200
+      ul.mb-0
+        li
+          | Olej v motoru:
+          ul
+            li 10 000 km
+            li nebo 1 rok
+        li
+          | Olej v převodovce:
+          ul
+            li 60 000 km
+            li nebo 4 roky

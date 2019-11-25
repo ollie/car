@@ -1,0 +1,87 @@
+form action=url method="post"
+  .form-group.row
+    label.col-sm-6.col-form-label for="car-name" Název
+    .col-sm-6
+      input.form-control(
+        type="text"
+        id="car-name"
+        name="car[name]"
+        value=car.name
+        class=('is-invalid' if car.errors.on(:name))
+        autofocus
+      )
+      - if car.errors.on(:name)
+        .invalid-feedback = car.errors.on(:name).join(', ')
+
+  .form-group.row
+    label.col-sm-6.col-form-label for="car-engine_oil_change_distance_interval" Výměna oleje v motoru po
+    .col-sm-6
+      .input-group
+        input.form-control(
+          type="number"
+          id="car-engine_oil_change_distance_interval"
+          name="car[engine_oil_change_distance_interval]"
+          min="0"
+          value=car.engine_oil_change_distance_interval
+          class=('is-invalid' if car.errors.on(:engine_oil_change_distance_interval))
+        )
+        .input-group-append
+          span.input-group-text Km
+        - if car.errors.on(:engine_oil_change_distance_interval)
+          .invalid-feedback = car.errors.on(:engine_oil_change_distance_interval).join(', ')
+
+  .form-group.row
+    label.col-sm-6.col-form-label for="car-engine_oil_change_time_interval" Výměna oleje v motoru po
+    .col-sm-6
+      .input-group
+        input.form-control(
+          type="number"
+          id="car-engine_oil_change_time_interval"
+          name="car[engine_oil_change_time_interval]"
+          min="0"
+          value=car.engine_oil_change_time_interval
+          class=('is-invalid' if car.errors.on(:engine_oil_change_time_interval))
+        )
+        .input-group-append
+          span.input-group-text Roky
+        - if car.errors.on(:engine_oil_change_time_interval)
+          .invalid-feedback = car.errors.on(:engine_oil_change_time_interval).join(', ')
+
+  .form-group.row
+    label.col-sm-6.col-form-label for="car-transmission_oil_change_distance_interval" Výměna oleje v převodovce po
+    .col-sm-6
+      .input-group
+        input.form-control(
+          type="number"
+          id="car-transmission_oil_change_distance_interval"
+          name="car[transmission_oil_change_distance_interval]"
+          min="0"
+          value=car.transmission_oil_change_distance_interval
+          class=('is-invalid' if car.errors.on(:transmission_oil_change_distance_interval))
+        )
+        .input-group-append
+          span.input-group-text Km
+        - if car.errors.on(:transmission_oil_change_distance_interval)
+          .invalid-feedback = car.errors.on(:transmission_oil_change_distance_interval).join(', ')
+
+  .form-group.row
+    label.col-sm-6.col-form-label for="car-transmission_oil_change_time_interval" Výměna oleje v převodovce po
+    .col-sm-6
+      .input-group
+        input.form-control(
+          type="number"
+          id="car-transmission_oil_change_time_interval"
+          name="car[transmission_oil_change_time_interval]"
+          min="0"
+          value=car.transmission_oil_change_time_interval
+          class=('is-invalid' if car.errors.on(:transmission_oil_change_time_interval))
+        )
+        .input-group-append
+          span.input-group-text Roky
+        - if car.errors.on(:transmission_oil_change_time_interval)
+          .invalid-feedback = car.errors.on(:transmission_oil_change_time_interval).join(', ')
+
+  .form-group.row
+    .offset-sm-6.col-sm-6
+      button.btn.btn-outline-primary> = car.new? ? 'Přidat' : 'Uložit'
+      a.btn.btn-outline-secondary href=cars_path Storno

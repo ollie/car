@@ -1,8 +1,11 @@
+p
+  a.btn.btn-outline-secondary href=car_path(car.id) ← Auto
+
 .row.mt-3
   .col-sm-10
-    h1.mb-3 = title 'Servis'
+    h1.mb-3 = title "#{car.name}: Servis"
   .col-sm-2.text-right
-    a.btn.btn-outline-primary.w-100.mb-3 href=new_service_entry_path Přidat
+    a.btn.btn-outline-primary.w-100.mb-3 href=new_service_entry_path(car.id) Přidat
 
 table.table.table-hover
   thead.thead-light
@@ -23,7 +26,7 @@ table.table.table-hover
     - service_entries.each do |service_entry|
       tr
         td.text-nowrap
-          a href=edit_service_entry_path(service_entry.id)
+          a href=edit_service_entry_path(car.id, service_entry.id)
             = l(service_entry.date)
         td
           = service_entry.title

@@ -1,0 +1,35 @@
+- if fuel_entry_chart.next_engine_oil_change_date || fuel_entry_chart.next_transmission_oil_change_date
+  .alert.alert-warning.text-center
+    - if fuel_entry_chart.next_engine_oil_change_date
+      ul.list-unstyled class=('mb-0' unless fuel_entry_chart.next_transmission_oil_change_date)
+        li
+          == "Výměna po #{car.engine_oil_change_time_interval} roce: "
+          - if fuel_entry_chart.next_engine_oil_change_date.fetch(:scheduled) == fuel_entry_chart.next_engine_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_chart.next_engine_oil_change_date.fetch(:scheduled))
+          - else
+            = l(fuel_entry_chart.next_engine_oil_change_date.fetch(:scheduled))
+          | .
+        li
+          == "Výměna po #{format_number(car.engine_oil_change_distance_interval, format: '%d')} km: "
+          - if fuel_entry_chart.next_engine_oil_change_date.fetch(:predicted) == fuel_entry_chart.next_engine_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_chart.next_engine_oil_change_date.fetch(:predicted))
+          - else
+            = l(fuel_entry_chart.next_engine_oil_change_date.fetch(:predicted))
+          | .
+
+    - if fuel_entry_chart.next_transmission_oil_change_date
+      ul.mb-0.list-unstyled
+        li
+          == "Výměna po #{car.transmission_oil_change_time_interval} letech: "
+          - if fuel_entry_chart.next_transmission_oil_change_date.fetch(:scheduled) == fuel_entry_chart.next_transmission_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_chart.next_transmission_oil_change_date.fetch(:scheduled))
+          - else
+            = l(fuel_entry_chart.next_transmission_oil_change_date.fetch(:scheduled))
+          | .
+        li
+          == "Výměna po #{format_number(car.transmission_oil_change_distance_interval, format: '%d')} km: "
+          - if fuel_entry_chart.next_transmission_oil_change_date.fetch(:predicted) == fuel_entry_chart.next_transmission_oil_change_date.fetch(:effective)
+            strong = l(fuel_entry_chart.next_transmission_oil_change_date.fetch(:predicted))
+          - else
+            = l(fuel_entry_chart.next_transmission_oil_change_date.fetch(:predicted))
+          | .

@@ -9,23 +9,19 @@ class FuelEntry < Sequel::Model
   plugin :translated_validation_messages
   plugin :defaults_setter
 
+  ##############
+  # Associations
+  ##############
+
+  many_to_one :car
+
   ###############
   # Class methods
   ###############
 
   class << self
-    def new_with_defaults
-      new(paid_on: Date.today)
-    end
-  end
-
-  #################
-  # Dataset methods
-  #################
-
-  dataset_module do
-    def ordered
-      order(Sequel.desc(:paid_on), Sequel.desc(:id))
+    def new_with_defaults(car)
+      new(paid_on: Date.today, car: car)
     end
   end
 
@@ -42,6 +38,10 @@ class FuelEntry < Sequel::Model
       liters
       total_price
     ]
+
+    validates_integer %i[
+      odometer
+    ]
   end
 
   #########################
@@ -51,7 +51,7 @@ class FuelEntry < Sequel::Model
   def previous
     return @previous if defined?(@previous)
 
-    @previous = model.ordered.where(Sequel.lit('id < ?', id)).first
+    @previous = car.fuel_entries_dataset.where(Sequel.lit('id < ?', id)).first
   end
 
   def days_since_previous_entry
@@ -125,16 +125,16 @@ class FuelEntry < Sequel::Model
   def previous_fuel_entry
     @previous_fuel_entry ||=
       if new?
-        model.ordered.first
+        car.fuel_entries_dataset.first
       else
-        model.ordered.where(Sequel.lit('id < ?', id)).first
+        car.fuel_entries_dataset.where(Sequel.lit('id < ?', id)).first
       end
   end
 
   def previous_partial_fuel_entries
     @previous_partial_fuel_entries ||= [].tap do |fuel_entries|
       if previous_fuel_entry
-        model.ordered.where(Sequel.lit('id <= ?', previous_fuel_entry.id)).each do |fuel_entry|
+        car.fuel_entries_dataset.where(Sequel.lit('id <= ?', previous_fuel_entry.id)).each do |fuel_entry|
           break if fuel_entry.full
 
           fuel_entries << fuel_entry

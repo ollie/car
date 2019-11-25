@@ -105,4 +105,4 @@ form action=url method="post" data-js-component="FuelEntryForm"
   .form-group.row
     .offset-sm-4.col-sm-8
       button.btn.btn-outline-primary> = fuel_entry.new? ? 'Přidat' : 'Uložit'
-      a.btn.btn-outline-secondary href=fuel_entries_path Storno
+      a.btn.btn-outline-secondary href=fuel_entries_path(car.id) Storno

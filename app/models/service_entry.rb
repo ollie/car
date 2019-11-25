@@ -9,23 +9,19 @@ class ServiceEntry < Sequel::Model
   plugin :translated_validation_messages
   plugin :defaults_setter
 
+  ##############
+  # Associations
+  ##############
+
+  many_to_one :car
+
   ###############
   # Class methods
   ###############
 
   class << self
-    def new_with_defaults
-      new(date: Date.today)
-    end
-  end
-
-  #################
-  # Dataset methods
-  #################
-
-  dataset_module do
-    def ordered
-      order(Sequel.desc(:date), Sequel.desc(:id))
+    def new_with_defaults(car)
+      new(date: Date.today, car: car)
     end
   end
 
