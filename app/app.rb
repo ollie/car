@@ -41,7 +41,7 @@ class App < Sinatra::Base
       session[:encrypted_username] = encrypted_username
       session[:encrypted_password] = encrypted_password
 
-      redirect fuel_entries_path
+      redirect cars_path
     else
       slim :'sessions/new', layout: :'layouts/sessions', locals: {
         login_failed: true
