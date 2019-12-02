@@ -36,7 +36,7 @@ p
           tr
             td colspan="6"
               a.btn.btn-outline-primary> href=new_fuel_entry_path(car.id) Přidat tankování
-              | nebo
+              span nebo
               a< href=fuel_entries_path(car.id) seznam všech záznamů
 
   .col-sm-6
@@ -67,7 +67,7 @@ p
           tr
             td colspan="6"
               a.btn.btn-outline-primary> href=new_service_entry_path(car.id) Přidat servis
-              | nebo
+              span nebo
               a< href=service_entries_path(car.id) seznam všech záznamů
 
 == partial_slim 'cars/_changes_info', car: car, fuel_entry_chart: fuel_entry_chart
