@@ -5,7 +5,7 @@ class @ServiceEntryForm
 
     return unless @priceInput.length
 
-    @priceInput.on('input', this._handleInput)
+    @priceInput.on('input', @_handleInput)
 
   _handleInput: =>
     @expenseInput.val(@priceInput.val())

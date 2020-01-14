@@ -2,7 +2,7 @@ class @Toggle
   constructor: ->
     $items = $('[data-toggle-target]')
 
-    $items.on('click', this._handleClick)
+    $items.on('click', @_handleClick)
 
   _handleClick: (e) =>
     e.preventDefault()

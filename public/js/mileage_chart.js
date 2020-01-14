@@ -11,20 +11,33 @@
     }
 
     init() {
-      var data;
+      var data, plotLines, yearTmp;
       data = JSON.parse($('#mileage-data').html());
-      data = data.map(function(item) {
-        var date, value;
-        date = Date.parse(item[0]);
+      plotLines = [];
+      yearTmp = null;
+      data = data.map((item) => {
+        var date, plotLineTimestamp, timestamp, value, year;
+        date = new Date(item[0]);
+        year = date.getFullYear();
+        if (yearTmp == null) {
+          yearTmp = year;
+        }
+        timestamp = date.getTime();
         value = item[1];
-        return [date, value];
+        if (year !== yearTmp) {
+          plotLineTimestamp = Date.UTC(year, 0, 1);
+          plotLines.push(this._createPlotLine(plotLineTimestamp, year));
+          yearTmp = year;
+        }
+        return [timestamp, value];
       });
       return Highcharts.chart('mileage-chart', {
         title: {
           text: 'Kilometry'
         },
         xAxis: {
-          type: 'datetime'
+          type: 'datetime',
+          plotLines: plotLines
         },
         yAxis: {
           title: {
@@ -42,6 +55,20 @@
           }
         ]
       });
+    }
+
+    _createPlotLine(value, text) {
+      return {
+        color: '#e6e6e6',
+        value: value,
+        width: 1,
+        label: {
+          text: text,
+          style: {
+            color: '#cccccc'
+          }
+        }
+      };
     }
 
   };
