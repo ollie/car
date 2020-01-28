@@ -41,7 +41,15 @@ class App < Sinatra::Base
       session[:encrypted_username] = encrypted_username
       session[:encrypted_password] = encrypted_password
 
-      redirect cars_path
+      cars = Car.ordered
+
+      if cars.count.zero?
+        redirect new_car_path
+      elsif cars.count == 1
+        redirect car_path(cars.first.id)
+      else
+        redirect cars_path
+      end
     else
       slim :'sessions/new', layout: :'layouts/sessions', locals: {
         login_failed: true
@@ -54,7 +62,15 @@ class App < Sinatra::Base
   ######
 
   get '/' do
-    redirect cars_path
+    cars = Car.ordered
+
+    if cars.count.zero?
+      redirect new_car_path
+    elsif cars.count == 1
+      redirect car_path(cars.first.id)
+    else
+      redirect cars_path
+    end
   end
 
   get Route(cars: '/cars') do

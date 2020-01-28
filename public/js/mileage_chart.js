@@ -31,12 +31,17 @@
         }
         return [timestamp, value];
       });
-      return Highcharts.chart('mileage-chart', {
+      return Highcharts.stockChart('mileage-chart', {
+        chart: {
+          spacing: [5, 0, 5, 0]
+        },
+        type: 'line',
         title: {
           text: 'Kilometry'
         },
         xAxis: {
           type: 'datetime',
+          ordinal: false, // Keep dates to scale
           plotLines: plotLines
         },
         yAxis: {
@@ -44,16 +49,43 @@
             text: 'Km'
           }
         },
-        legend: {
-          enabled: false
-        },
         series: [
           {
-            type: 'line',
             name: 'Odometer',
+            showInNavigator: true,
+            color: '#7cb5ec',
+            lineWidth: 4,
+            type: 'line',
+            index: 4,
+            marker: {
+              lineWidth: 4,
+              radius: 6,
+              lineColor: '#7cb5ec',
+              fillColor: 'white'
+            },
             data: data
           }
-        ]
+        ],
+        rangeSelector: {
+          buttons: [
+            {
+              type: 'year',
+              count: 1,
+              text: 'Rok'
+            },
+            {
+              type: 'all',
+              text: 'Vše'
+            }
+          ],
+          selected: 0,
+          inputBoxWidth: 100,
+          inputDateFormat: '%B %Y',
+          inputEditDateFormat: '%d. %m. %Y'
+        },
+        credits: {
+          enabled: false
+        }
       });
     }
 
