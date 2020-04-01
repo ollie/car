@@ -1,4 +1,4 @@
-Layout/AlignHash:
+Layout/HashAlignment:
   EnforcedColonStyle:
     - key
     - table
