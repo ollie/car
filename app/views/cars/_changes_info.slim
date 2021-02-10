@@ -16,6 +16,8 @@
           - else
             = l(fuel_entry_chart.next_engine_oil_change_date.fetch(:predicted))
           | .
+        li
+          == "Odhad po #{car.engine_oil_change_time_interval} roce: #{format_number(fuel_entry_chart.next_engine_oil_change_date.fetch(:distance_per_year), format: '%d')} km."
 
     - if fuel_entry_chart.next_transmission_oil_change_date
       ul.mb-0.list-unstyled
@@ -33,3 +35,5 @@
           - else
             = l(fuel_entry_chart.next_transmission_oil_change_date.fetch(:predicted))
           | .
+        li
+          == "Odhad po #{car.transmission_oil_change_time_interval} letech: #{format_number(fuel_entry_chart.next_transmission_oil_change_date.fetch(:distance_per_year), format: '%d')} km."

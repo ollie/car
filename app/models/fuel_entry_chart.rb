@@ -46,10 +46,13 @@ class FuelEntryChart
     scheduled_change_date = last_change.date.next_year(years_interval)
     effective_change_date = [next_change_date, scheduled_change_date].min
 
+    distance_per_year = ((years_interval * 365) / (last_refuelling.paid_on - last_change.date).to_f * distance_since_last_change).to_i
+
     {
       predicted: next_change_date,
       scheduled: scheduled_change_date,
-      effective: effective_change_date
+      effective: effective_change_date,
+      distance_per_year: distance_per_year
     }
   end
 end
