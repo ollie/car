@@ -39,7 +39,7 @@ class FuelEntryChart
     days_since_last_change     = (last_refuelling.paid_on - last_change.date).to_i
     distance_since_last_change = last_refuelling.odometer - last_change.odometer
 
-    return if days_since_last_change < 0 || distance_since_last_change <= 0
+    return if days_since_last_change <= 0 || distance_since_last_change <= 0
 
     days_to_next_change   = (distance_interval.to_f / distance_since_last_change * days_since_last_change).to_i
     next_change_date      = last_change.date + days_to_next_change
