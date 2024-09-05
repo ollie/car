@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'i18n'
 gem 'multi_json'
+gem 'logger'
 gem 'oj'
 gem 'pg'
 gem 'pry', require: false
