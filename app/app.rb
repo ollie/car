@@ -158,7 +158,7 @@ class App < Sinatra::Base
       slim :'fuel_entries/index', locals: {
         car:              car,
         fuel_entries:     fuel_entries,
-        fuel_entry_stats: FuelEntryStats.new(car)
+        fuel_entry_stats: FuelEntryStats.new(car.fuel_entries_dataset)
       }
     end
   end
@@ -239,7 +239,7 @@ class App < Sinatra::Base
       slim :'service_entries/index', locals: {
         car:                 car,
         service_entries:     service_entries,
-        service_entry_stats: ServiceEntryStats.new
+        service_entry_stats: ServiceEntryStats.new(car.service_entries_dataset)
       }
     end
   end

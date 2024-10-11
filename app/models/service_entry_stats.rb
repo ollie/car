@@ -1,9 +1,12 @@
 class ServiceEntryStats
+  attr_accessor :dataset
   attr_accessor :entries
   attr_accessor :price
   attr_accessor :expenses
 
-  def initialize
+  def initialize(dataset)
+    self.dataset = dataset
+
     self.entries  = 0
     self.price    = 0
     self.expenses = 0
@@ -12,16 +15,14 @@ class ServiceEntryStats
   end
 
   def calculate?
-    ServiceEntry.count > 1
+    dataset.count > 1
   end
 
   private
 
   def perform
-    entries = ServiceEntry.dataset
-
-    self.entries  = entries.count
-    self.price    = entries.sum(:price)
-    self.expenses = entries.sum(:expense)
+    self.entries  = dataset.count
+    self.price    = dataset.sum(:price)
+    self.expenses = dataset.sum(:expense)
   end
 end

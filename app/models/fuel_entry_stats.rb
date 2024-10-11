@@ -1,5 +1,5 @@
 class FuelEntryStats
-  attr_accessor :car
+  attr_accessor :dataset
   attr_accessor :entries
   attr_accessor :trips
   attr_accessor :liters
@@ -8,8 +8,9 @@ class FuelEntryStats
   attr_accessor :price_per_km
   attr_accessor :consumption
 
-  def initialize(car)
-    self.car          = car
+  def initialize(dataset)
+    self.dataset = dataset
+
     self.entries      = 0
     self.trips        = 0
     self.liters       = 0
@@ -19,13 +20,13 @@ class FuelEntryStats
   end
 
   def calculate?
-    car.fuel_entries_dataset.count > 1
+    dataset.count > 1
   end
 
   private
 
   def perform
-    car.fuel_entries_dataset.each do |fuel_entry|
+    dataset.each do |fuel_entry|
       next unless fuel_entry.trip
 
       self.entries      += 1
