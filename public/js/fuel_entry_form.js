@@ -30,7 +30,7 @@ class FuelEntryForm {
     this.#unitPriceWrapper = $("#fuel-entry-unit-price")
     this.#unitPriceSpan = this.#unitPriceWrapper.find("span")
 
-    this.#litersInput.add(this.#totalPriceInput).on("input", this.#handleUnitPrice)
+    this.#litersInput.add(this.#totalPriceInput).on("input", this.#handleUnitPrice.bind(this))
   }
 
   #handleOdometerInput() {
